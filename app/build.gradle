@@ -30,6 +30,9 @@ android {
         jvmTarget = '1.8'
     }
     namespace 'com.example.myapplication'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
