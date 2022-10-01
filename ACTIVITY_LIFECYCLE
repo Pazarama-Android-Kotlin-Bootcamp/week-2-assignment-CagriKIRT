@@ -1,0 +1,53 @@
+AKTİVİTE NEDİR?
+
+Android uygulaması  masaüstü vb. diğer uygulamalar gibi bir main metodu veya buna benzer bir başlangıç noktası şeklinde başlamamaktadır.
+Bunun sebebi mobil uygulamalarda kullanıcı uygulamayı her zaman aynı sayfada açmak istemeyebilir.
+Bu yüzden android uygulamaları activity(aktivite) adını verdiğimiz yapılar ile başlamaktadır.
+
+Aktiviteler başlamasından kapanmasına kadar geçirdiği evrelere aktivite yaşam döngüsü denir ve 6 ana callback ile çalışır.
+
+    Aktiviteler başlar iken
+
+    onCreate=> onStart=> onResume
+
+        callbacklerini çağırır.
+
+    Yok olurken
+
+    onPause =>onStop => onDestroy
+
+        adımlarını izler.
+
+Aktivite yaşam döngülerin kullanıcının uygulamayı kullanma durumuna göre değişik adımları izleyebilir.
+Bunları bilmek uygulamamızı daha iyi yönetebilmemizi sağlar. Örnek olarak.
+
+Bir aktivite başka bir aktivite tarafında arka ekranda kalırsa onPause çalışır. Tekrar gözüktüğünde onResume ile devam eder.
+
+Eğer aktivite görünürde değil ise,OnResume=> OnStop=>OnRestart  şeklinde çalışır. Aktivite tekrar geri gelirken OnStart=> onResume şeklinde gelir.
+
+
+//En çok karşılaşılan android activity lifecycle hataları.
+
+----EKRAN ROTASYON DEĞİŞİKLİĞİ
+Ekran rotasyonu değişitirildiğinde activity sırasıyla
+onPause->onStop->onDestroy adımlarınını gerçekleştirerek ilk haldeki verileri yok etmektedir.
+hemen ardından onCreate->onStart->onResume adımları ile aktiviteyi tekrar çalıştırmaktadır.
+
+==Alınabilecek önlemler:
+
+-Aktiveteye özel bir ViewModel class ı oluşturarak işlemlerimizi bu class içersinde yaparak verilerimizi tutabiliriz.
+
+-Aktivite içerisinde onSaveInstanceState metodunu override ederek hangi verileri bundle içerisinde saklayabiliriz ve aktivite yeniden oluşturulduğunda tekrar onRestoreInstanceState ile verilerimizi alabiliriz.
+
+-Çok önerilmeyen başka bir yaklaşım ise manifest.xml dosyasında android:configChanges="orientation|keyboardHidden|screenSize" ekleyerek android uygulamamıza aktiviteleri yeniden oluşturma demektir.
+Ancak burada aktivite kontrolümüzü kendimiz yapmamız gerekmektedir.
+
+
+
+----Aktivite oluşturulmadan fragment eklemek
+Herhangibir sebepten dolayı aktiviteyi ilk defa/yeniden oluşturmadan önce fragment eklenmesi uygulamada patlamasına yol açmaktadır.
+
+==Alınabilecek önlemler:
+
+-savedInstanceState == null kontrolü onCreate içerisinde yapılarak önlenebilir.
+-yrıca telefon rotasyonu değiştirildiğinde daha önce kullanılan fragmentı tekrar oluşturmamak için findFragmentByTag or findFragmentById kullanılarak getirilecek fragmentın daha önce kullanılıp kullanılmadığına bakılmamalıdır.
